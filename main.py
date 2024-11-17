@@ -26,7 +26,8 @@ def build_triangle(stage):
     top = point.parse(config[stage]["top"], "a63")
     left = point.parse(config[stage]["left"], "a61")
     right = point.parse(config[stage]["right"], "a62")
-    return triangle.build(top, left, right)
+    center = point.parse(config[stage]["center"], "a64")
+    return triangle.Triangle(left=left, right=right, top=top, center=center)
 
 
 def verify_coords():
@@ -49,14 +50,16 @@ def verify_triangle(stage):
     top = point.parse(config[stage]["top"], "top")
     left = point.parse(config[stage]["left"], "left")
     right = point.parse(config[stage]["right"], "right")
-    print(f"{stage}{left}")
-    print(f"{stage}{right}")
-    print(f"{stage}{top}")
-    print(f"{stage} verification --v")
-    print(top.d2(left))
-    print(top.d2(right))
-    print(left.d2(right))
-    print(f"^-- verification of {stage}")
+    shortest_side = min(top.d2(left), top.d2(right), left.d2(right))
+    # if target.d2(left) > shortest_side:
+    #     raise RuntimeError(f"{stage} target-to-left is too far")
+    # if target.d2(right) > shortest_side:
+    #     raise RuntimeError(f"{stage} target-to-right is too far")
+    # if target.d2(top) > shortest_side:
+    #     raise RuntimeError(f"{stage} target-to-top is too far")
+    # print(f"{stage}{left}")
+    # print(f"{stage}{right}")
+    # print(f"{stage}{top}")
 
 
 if __name__ == "__main__":

@@ -25,6 +25,13 @@ class Point:
     def __repr__(self):
         return self.__str__()
 
+    def __sub__(self, other):
+        return Point(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def vector(self):
+        """Convert to array so numpy can handle it"""
+        return [self.x, self.y, self.z]
+
 
 def parse(s: str, glyph: str) -> Point:
     """
