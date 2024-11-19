@@ -35,11 +35,30 @@ class Triangle(list):
 
     def _build(self):
         """Build up a triangle of coordinates based on the corners"""
-        left_side = point.divide(self.top, self.left, 15)
-        right_side = point.divide(self.top, self.right, 15)
-        for row, _ in enumerate(self):
-            i = row * 2
-            self[row] = point.divide(left_side[i], right_side[i], i + 1)
+        left_side_coords = point.divide(self.top, self.left, 9)
+        right_side_coords = point.divide(self.top, self.right, 9)
+        for row in range(8):
+            upper_coords = point.divide(left_side_coords[row], right_side_coords[row], row + 1)
+            lower_coords = point.divide(left_side_coords[row + 1], right_side_coords[row + 1], row + 2)
+            self[row] = self.calc_triangles(upper_coords, lower_coords)
+        print(self.center)
+        print((self.left.x + self.right.x + self.top.x) / 3)
+
+    @staticmethod
+    def calc_triangles(upper_coords, lower_coords):
+        """
+        Calculate the centroid coordinates of a row sub-triangles given by the coords of their "upper"
+        and "lower" points
+        """
+        centroids = []
+        for i, lower in enumerate(lower_coords):
+            # upward triangle:
+            if i < len(lower_coords) - 1:
+                centroids.append(point.centroid(lower, lower_coords[i + 1], upper_coords[i]))
+                # and downward triangle:
+                if i > 0:
+                    centroids.append(point.centroid(lower, upper_coords[i - 1], upper_coords[i]))
+        return centroids
 
     def _normal(self):
         """Find the normal vector: left - top and right - top, then cross product"""

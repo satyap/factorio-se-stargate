@@ -71,3 +71,12 @@ def divide(p1: Point, p2: Point, k: int) -> List[Point]:
         n = k - m - 1
         points.append(segment(p1, p2, m, n))
     return points
+
+
+def centroid(p1: Point, p2: Point, p3: Point) -> Point:
+    """Return centroid of the 3 points given"""
+    return Point(
+        (p1.x + p2.x + p3.x) / 3,
+        (p1.y + p2.y + p3.y) / 3,
+        (p1.z + p2.z + p3.z) / 3,
+    )
