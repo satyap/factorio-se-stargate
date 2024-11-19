@@ -1,6 +1,10 @@
+import math
 from _decimal import Decimal
 from math import sqrt
 from typing import List
+import numpy
+
+from src.vectors import vector_intersects_triangle
 
 
 class Point:
@@ -11,6 +15,8 @@ class Point:
         self.y = Decimal(y)
         self.z = Decimal(z)
         self.glyph = glyph
+        self.theta = self._theta()
+        self.phi = self._phi()
 
     def d2(self, other):
         """Square of distance from another point."""
@@ -31,6 +37,32 @@ class Point:
     def vector(self):
         """Convert to array so numpy can handle it"""
         return [self.x, self.y, self.z]
+
+    def _theta(self):
+        """Return spherical coordinate angle theta"""
+        return math.atan2(self.y, self.x)
+
+    def _phi(self):
+        """Return spherical coordinate angle phi"""
+        s = math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2)
+        return math.acos(self.z / Decimal(s))
+
+    def passes_through(self, triangle):
+        """Returns true if this point's vector passes through the triangle"""
+        return vector_intersects_triangle(
+            numpy.array(triangle.left.vector()),
+            numpy.array(triangle.top.vector()),
+            numpy.array(triangle.right.vector()),
+            numpy.array([0, 0, 0]),
+            numpy.array(self.vector()),
+        )
+        # min_theta = min(triangle.left.theta, triangle.right.theta, triangle.top.theta)
+        # max_theta = max(triangle.left.theta, triangle.right.theta, triangle.top.theta)
+        # min_phi = min(triangle.left.phi, triangle.right.phi, triangle.top.phi)
+        # max_phi = max(triangle.left.phi, triangle.right.phi, triangle.top.phi)
+        # theta_match = min_theta <= self.theta <= max_theta
+        # phi_match = min_phi <= self.phi <= max_phi
+        # return theta_match and phi_match
 
 
 def parse(s: str, glyph: str) -> Point:
@@ -71,12 +103,3 @@ def divide(p1: Point, p2: Point, k: int) -> List[Point]:
         n = k - m - 1
         points.append(segment(p1, p2, m, n))
     return points
-
-
-def centroid(p1: Point, p2: Point, p3: Point) -> Point:
-    """Return centroid of the 3 points given"""
-    return Point(
-        (p1.x + p2.x + p3.x) / 3,
-        (p1.y + p2.y + p3.y) / 3,
-        (p1.z + p2.z + p3.z) / 3,
-    )
