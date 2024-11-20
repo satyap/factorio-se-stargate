@@ -1,7 +1,4 @@
-from _decimal import Decimal
-
 from src import point
-from numpy import cross, dot, subtract
 
 
 class Triangle(list):
@@ -52,21 +49,3 @@ class Triangle(list):
                 top = upper_coords[i]
                 triangles.append(Triangle(left, right, top))
         return triangles
-
-    def _normal(self):
-        """Find the normal vector: left - top and right - top, then cross product"""
-        p1 = self.left - self.top
-        p2 = self.right - self.top
-        return cross(p1.vector(), p2.vector())
-
-    def project(self, r: point.Point):
-        """Project point r into the plane of the triangle"""
-        # First get the vector from our triangle's center to the target
-        r0 = self.center - r
-        v3 = subtract(r0.vector(), r.vector())
-        # Project it:
-        d = dot(self.center.vector(), v3)
-        m = [self.center.x * d, self.center.y * d, self.center.z * d]
-        v3m = subtract(v3, m)
-        p = subtract(r0.vector(), v3m)
-        return point.Point(p[0], p[1], p[2], "projected_target")
