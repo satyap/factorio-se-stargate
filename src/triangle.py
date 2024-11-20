@@ -14,12 +14,12 @@ class Triangle(list):
         for x in range(8):
             self.append([])
 
-    def nearest(self, target: point.Point) -> (object, Decimal, Decimal):
-        """Return a sub-triangle that is closest to the projection of the target into the triangle's plane"""
-        for y, i in enumerate(self):
-            for x, j in enumerate(i):
+    def nearest(self, target: point.Point) -> (object, int, int):
+        """Return a sub-triangle that the target vector passes through"""
+        for row, i in enumerate(self):
+            for col, j in enumerate(i):
                 if target.passes_through(j):
-                    return j, y, x + 7 - y  # glyphs are named with y-coord first :(
+                    return j, row, col + 7 - row
         raise RuntimeError("out of triangle")
 
     def build(self):
@@ -40,17 +40,17 @@ class Triangle(list):
         triangles = []
         for i, lower in enumerate(lower_coords):
             if i < len(lower_coords) - 1:
-                # upward triangle:
-                left = lower
-                right = lower_coords[i + 1]
-                top = upper_coords[i]
-                triangles.append(Triangle(left, right, top))
-                # and downward triangle:
                 if i > 0:
-                    top = lower
+                    # downward triangle:
+                    top = lower_coords[i]
                     right = upper_coords[i - 1]
                     left = upper_coords[i]
                     triangles.append(Triangle(left, right, top))
+                # upward triangle:
+                left = lower_coords[i]
+                right = lower_coords[i + 1]
+                top = upper_coords[i]
+                triangles.append(Triangle(left, right, top))
         return triangles
 
     def _normal(self):
