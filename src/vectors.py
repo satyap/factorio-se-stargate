@@ -1,5 +1,12 @@
 # code from google AI
 import numpy as np
+from numpy import ndarray, dot, arccos, clip, pi
+from numpy.linalg import norm
+
+
+def angle_between(v1: ndarray, v2: ndarray):
+    c = dot(v1, v2) / norm(v1) / norm(v2)
+    return arccos(clip(c, -1, 1))
 
 
 def vector_intersects_triangle(v0, v1, v2, origin, direction):
@@ -38,7 +45,17 @@ def vector_intersects_triangle(v0, v1, v2, origin, direction):
         return False
 
 
-def is_point_inside_triangle(v0, v1, v2, point):
+def is_point_inside_triangle(v1, v2, v3, v0):
+    # Using "2PI is the sum of angles between vectors from corners to target":
+    # i.e. 2PI is the sum of angles going around the pyramids's vertical edges:
+    angle1 = angle_between(v1 - v0, v2 - v0)
+    angle2 = angle_between(v2 - v0, v3 - v0)
+    angle3 = angle_between(v3 - v0, v1 - v0)
+    diff = abs(angle1 + angle2 + angle3 - 2 * pi)
+    return diff < 0.0001
+
+
+def _is_point_inside_triangle(v0, v1, v2, point):
     """
     Checks if a point is inside a triangle using the barycentric coordinates method.
 

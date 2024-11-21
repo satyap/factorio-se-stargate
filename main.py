@@ -49,8 +49,8 @@ def all_symbols():
 
 if __name__ == "__main__":
     starting_point()
-    all_symbols()
+    # all_symbols()
     for stg in ("s2", "s3", "s4", "s5", "s6", "s7", "s8"):
         tr = load_triangle(stg)
         tr.build()
-        print(f"{stg}-next: {tr.nearest(target)}")
+        print(f"{stg}-next: {tr.nearest(target)[1:3]}")

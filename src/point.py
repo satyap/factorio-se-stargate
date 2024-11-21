@@ -1,11 +1,9 @@
 from _decimal import Decimal
-from math import sqrt
 from typing import List
 
-from numpy import array, dot, clip, arccos
-from numpy.linalg import norm
+from numpy import array
 
-from src.vectors import vector_intersects_triangle
+from src.vectors import vector_intersects_triangle, angle_between
 
 
 class Point:
@@ -16,7 +14,6 @@ class Point:
         self.y = float(y)
         self.z = float(z)
         self.glyph = glyph
-        self.magnitude = norm(self.vector())
 
     def d2(self, other):
         """Square of distance from another point."""
@@ -35,8 +32,7 @@ class Point:
         return Point(self.x - other.x, self.y - other.y, self.z - other.z)
 
     def angle(self, other):
-        c = dot(self.vector(), other.vector()) / self.magnitude / other.magnitude
-        return arccos(clip(c, -1, 1))
+        return angle_between(self.vector(), other.vector())
 
     def vector(self):
         """Convert to array so numpy can handle it"""
@@ -44,6 +40,7 @@ class Point:
 
     def passes_through(self, triangle):
         """Returns true if this point's vector passes through the triangle"""
+        # Using Moller-Trumbore intersection algorithm:
         return vector_intersects_triangle(
             triangle.top.vector(),
             triangle.right.vector(),

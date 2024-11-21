@@ -13,6 +13,9 @@ class TestTriangle(TestCase):
         )
         t.build()
 
+        self.assertEqual(len(t), 8)  # 8 rows
+        self.assertEqual(len(t[7]), 15)  # 15 triangles in bottom row
+
         top_tr = t[0][0]
         self.assertEqual(top_tr.left, point.Point(7, 14, 0))
         self.assertEqual(top_tr.right, point.Point(9, 14, 0))
@@ -33,4 +36,7 @@ class TestTriangle(TestCase):
         self.assertEqual(t[1][2].right, point.Point(10, 12, 0))
         self.assertEqual(t[1][2].top, point.Point(9, 14, 0))
 
-
+        # bottom row - upward, right of the middle one
+        self.assertEqual(t[7][8].left, point.Point(8, 0, 0))
+        self.assertEqual(t[7][8].right, point.Point(10, 0, 0))
+        self.assertEqual(t[7][8].top, point.Point(9, 2, 0))
