@@ -3,6 +3,7 @@ import configparser
 from math import degrees
 
 from src import triangle as triangle, point as point
+from src.first_triangle import FirstTriangle
 
 config = configparser.ConfigParser()
 config.read("starmap.ini")
@@ -34,10 +35,9 @@ def load_triangle(stage):
 
 
 def all_symbols():
-    top = point.parse(config["corners"]["top"], "a63")
-    left = point.parse(config["corners"]["left"], "a61")
-    right = point.parse(config["corners"]["right"], "a62")
-    t = triangle.Triangle(left=left, right=right, top=top)
+    starmap = config["starmap"]
+    ft = FirstTriangle(starmap, config["corners"])
+    t = triangle.Triangle(left=ft.left(), right=ft.right(), top=ft.top())
     t.build()
     for i in range(2, 9):
         if not target.passes_through(t):
@@ -49,8 +49,8 @@ def all_symbols():
 
 if __name__ == "__main__":
     starting_point()
-    # all_symbols()
-    for stg in ("s2", "s3", "s4", "s5", "s6", "s7", "s8"):
-        tr = load_triangle(stg)
-        tr.build()
-        print(f"{stg}-next: {tr.nearest(target)[1:3]}")
+    all_symbols()
+    # for stg in ("s2", "s3", "s4", "s5", "s6", "s7", "s8"):
+    #     tr = load_triangle(stg)
+    #     tr.build()
+    #     print(f"{stg}-next: {tr.nearest(target)[1:3]}")

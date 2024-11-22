@@ -47,7 +47,6 @@ def vector_intersects_triangle(v0, v1, v2, origin, direction):
 
 def is_point_inside_triangle(v1, v2, v3, v0):
     # Using "2PI is the sum of angles between vectors from corners to target":
-    # i.e. 2PI is the sum of angles going around the pyramids's vertical edges:
     angle1 = angle_between(v1 - v0, v2 - v0)
     angle2 = angle_between(v2 - v0, v3 - v0)
     angle3 = angle_between(v3 - v0, v1 - v0)
