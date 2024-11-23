@@ -1,4 +1,3 @@
-from _decimal import Decimal
 from typing import List
 
 from numpy import array
@@ -9,7 +8,7 @@ from src.vectors import vector_intersects_triangle, angle_between
 class Point:
     """Point in 3D space"""
 
-    def __init__(self, x: Decimal, y: Decimal, z: Decimal, glyph: str = None):
+    def __init__(self, x: float, y: float, z: float, glyph: str = None):
         self.x = float(x)
         self.y = float(y)
         self.z = float(z)
@@ -22,14 +21,8 @@ class Point:
     def __str__(self) -> str:
         return f"{self.glyph}: ({self.x}, {self.y}, {self.z})"
 
-    def __eq__(self, other):
-        return self.x == other.x and self.y == other.y and self.z == other.z
-
     def __repr__(self):
         return self.__str__()
-
-    def __sub__(self, other):
-        return Point(self.x - other.x, self.y - other.y, self.z - other.z)
 
     def angle(self, other):
         return angle_between(self.vector(), other.vector())
@@ -42,9 +35,9 @@ class Point:
         """Returns true if this point's vector passes through the triangle"""
         # Using Moller-Trumbore intersection algorithm:
         return vector_intersects_triangle(
-            triangle.top.vector(),
             triangle.right.vector(),
             triangle.left.vector(),
+            triangle.top.vector(),
             array([0, 0, 0]),
             self.vector(),
         )
@@ -61,7 +54,7 @@ def parse(s: str, glyph: str) -> Point:
     return Point(x.strip(), y.strip(), z.strip(), glyph)
 
 
-def closest(target: Point, candidates: List[Point]) -> (Point, Decimal):
+def closest(target: Point, candidates: List[Point]) -> (Point, float):
     nearest = None
     angle = None
     for candidate in candidates:

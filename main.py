@@ -3,7 +3,6 @@ import configparser
 from math import degrees
 
 from src import triangle as triangle, point as point
-from src.first_triangle import FirstTriangle
 
 config = configparser.ConfigParser()
 config.read("starmap.ini")
@@ -28,29 +27,18 @@ def load_triangle(stage):
     top = point.parse(config[stage]["top"], "a63")
     left = point.parse(config[stage]["left"], "a61")
     right = point.parse(config[stage]["right"], "a62")
+    print(f"left side length: {top.d2(left)}")
+    print(f"right side length: {top.d2(right)}")
+    print(f"bottom length: {left.d2(right)}")
     t = triangle.Triangle(left=left, right=right, top=top)
     if not target.passes_through(t):
         raise RuntimeError("target doesn't pass through triangle")
     return t
 
 
-def all_symbols():
-    starmap = config["starmap"]
-    ft = FirstTriangle(starmap, config["corners"])
-    t = triangle.Triangle(left=ft.left(), right=ft.right(), top=ft.top())
-    t.build()
-    for i in range(2, 9):
-        if not target.passes_through(t):
-            raise RuntimeError("target doesn't pass through triangle")
-        t, row, col = t.nearest(target)
-        print(f"symbol {i}: {row}, {col}")
-        t.build()
-
-
 if __name__ == "__main__":
     starting_point()
-    all_symbols()
-    # for stg in ("s2", "s3", "s4", "s5", "s6", "s7", "s8"):
-    #     tr = load_triangle(stg)
-    #     tr.build()
-    #     print(f"{stg}-next: {tr.nearest(target)[1:3]}")
+    for stg in ("s2", "s3", "s4", "s5", "s6", "s7", "s8"):
+        tr = load_triangle(stg)
+        tr.build()
+        print(f"{stg}-next: {tr.nearest(target)[1:3]}")
