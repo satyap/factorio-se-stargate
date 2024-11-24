@@ -6,7 +6,7 @@ from src.vectors import vector_intersects_triangle, angle_between
 
 
 class Point:
-    """Point in 3D space"""
+    """Point in 3D space. Or, a vector from (0,0,0) to this point."""
 
     def __init__(self, x: float, y: float, z: float, glyph: str = None):
         self.x = float(x)
@@ -25,6 +25,7 @@ class Point:
         return self.__str__()
 
     def angle(self, other):
+        """Angle between this vector and another, in radians"""
         return angle_between(self.vector(), other.vector())
 
     def vector(self):
@@ -55,6 +56,7 @@ def parse(s: str, glyph: str) -> Point:
 
 
 def closest(target: Point, candidates: List[Point]) -> (Point, float):
+    """Return the coordinate that passes closest to the target vector"""
     nearest = None
     angle = None
     for candidate in candidates:
@@ -65,6 +67,7 @@ def closest(target: Point, candidates: List[Point]) -> (Point, float):
 
 
 def segment(p1: Point, p2: Point, m: int, n: int) -> Point:
+    """Return the point that segments p1->p2 in m:n parts"""
     x = (n * p1.x + m * p2.x) / (m + n)
     y = (n * p1.y + m * p2.y) / (m + n)
     z = (n * p1.z + m * p2.z) / (m + n)
