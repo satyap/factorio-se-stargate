@@ -24,9 +24,13 @@ def starting_point():
 
 def load_triangle(stage):
     """Returns a triangle built up for the given stage"""
-    top = point.parse(config[stage]["top"], "a63")
-    left = point.parse(config[stage]["left"], "a61")
-    right = point.parse(config[stage]["right"], "a62")
+    try:
+        top = point.parse(config[stage]["top"], "a63")
+        left = point.parse(config[stage]["left"], "a61")
+        right = point.parse(config[stage]["right"], "a62")
+    except KeyError as e:
+        print(f"stage {stg} not ready yet? {e} missing")
+        return
     print(f"left side length: {top.d2(left)}")
     print(f"right side length: {top.d2(right)}")
     print(f"bottom length: {left.d2(right)}")
@@ -40,5 +44,6 @@ if __name__ == "__main__":
     starting_point()
     for stg in ("s2", "s3", "s4", "s5", "s6", "s7", "s8"):
         tr = load_triangle(stg)
-        tr.build()
-        print(f"{stg}-next: {tr.nearest(target)[1:3]}")
+        if tr:
+            tr.build()
+            print(f"{stg}-next: {tr.nearest(target)[1:3]}")
